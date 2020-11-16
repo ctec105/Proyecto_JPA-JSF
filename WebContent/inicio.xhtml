@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:p="http://primefaces.org/ui">
+<h:head>
+	<title>Inicio de Sesión</title>
+</h:head>
+<h:body>
+	<div style="position: absolute; left: 47%; top: 45%; width: 480px; height: 200px; margin: -100px 0 0 -200px;">
+		<h:form id="form">
+		    <p:panel id="panel" header="Inicio de Sesión">
+		        <h:panelGrid columns="3" style="width:100%">
+			         <f:facet name="header">  
+		                <p:messages id="msgs" escape="false">  
+					        <p:effect type="pulsate" event="load" delay="1000">  
+					            <f:param name="mode" value="'show'" />  
+					        </p:effect>  
+					    </p:messages>  
+		            </f:facet>  
+	            
+		            <h:outputLabel for="usuario" value="Usuario: *" />
+		            <p:inputText id="usuario" value="#{login.usuario.login}" required="true" label="Usuario">
+		                <f:validateLength minimum="2" />
+		                <p:ajax update="msgUsuario" event="keyup" />
+		            </p:inputText>
+		            <p:message for="usuario" id="msgUsuario" display="icon"/>
+		            
+		            <h:outputLabel for="contraseña" value="Contraseña: *" />
+		            <p:password id="EspanishFeedback" value="#{login.usuario.password}" required="true" label="Contraseña" feedback="true" promptLabel="Por favor, introduzca una contraseña" weakLabel="Débil" goodLabel="Medio" strongLabel="Bueno">
+		            	<f:validateLength minimum="2" />
+		                <p:ajax update="msgContraseña" event="keyup" />
+		            </p:password>
+		            <p:message for="EspanishFeedback" id="msgContraseña" display="icon"/>
+                    
+		            <f:facet name="footer">  
+				        <p:commandButton id="btn" value="Ingresar" update="panel" action="#{login.validar}" icon="ui-icon-person" style="margin:0"/>
+				    </f:facet> 
+		        </h:panelGrid>
+		    </p:panel>
+		</h:form>
+	</div>
+</h:body>
+</html>
+<!-- <p:keyboard id="contraseña" value="#{login.usuario.password}" required="true" label="Contraseña" feedback="true" promptLabel="" layout="qwertyBasic" password="true">
+		                <f:validateLength minimum="2" />
+		                <p:ajax update="msgContraseña" event="keyup" />
+		            </p:keyboard> -->

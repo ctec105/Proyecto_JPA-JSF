@@ -1,0 +1,137 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	  xmlns:f="http://java.sun.com/jsf/core"
+	  xmlns:h="http://java.sun.com/jsf/html"
+	  xmlns:ui="http://java.sun.com/jsf/facelets"
+	  xmlns:p="http://primefaces.org/ui"
+	  xmlns:c="http://java.sun.com/jsp/jstl/core">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1" />
+<title>Generar Pre-Factura</title>
+</head>
+<body>
+	<ui:composition template="/plantillas/plantilla.xhtml">
+		<ui:define name="body">
+			<h:form id="formulario">
+				<p:panel id="panel" header="#{formPrefactura.prefactura.idPrefactura == 0 ? 'Generar Pre-Factura' : 'Detalle Pre-Factura' }">
+					<p:messages id="msgs"/>
+					
+					<!-- Datos de la PreFactura-->
+					<p:panelGrid id="grid1" style="width:100%; margin-top:20px">
+						<f:facet name="header">  
+					        <p:row>  
+					            <p:column colspan="2">Datos de la Pre-Factura</p:column>  
+					        </p:row> 
+					    </f:facet> 
+					    <p:row rendered="#{formPrefactura.prefactura.idPrefactura != 0}">  
+				            <p:column style="width:25%;"><h:outputLabel value="Nro. Pre-Factura:" /></p:column> 
+				            <p:column style="width:75%;"><h:outputText value="#{formPrefactura.prefactura.idPrefactura}" /></p:column> 
+				        </p:row>
+					    <p:row>  
+				            <p:column><h:outputLabel value="Usuario:" /></p:column> 
+				            <p:column><h:outputText value="#{formPrefactura.prefactura.usuario}" /></p:column> 
+				        </p:row>
+						<p:row>  
+				            <p:column><h:outputLabel value="Fecha:" /></p:column> 
+				            <p:column>
+				            	<h:outputText value="#{formPrefactura.prefactura.fecha}">
+				            		<f:convertDateTime pattern="dd/MM/yyyy"/>
+				            	</h:outputText>
+				            </p:column> 
+				        </p:row>
+	        	        <p:row>  
+				            <p:column><h:outputLabel value="Ruc:" /></p:column> 
+				            <p:column><h:outputText value="#{formPrefactura.prefactura.ruc == null ? '_____________' : formPrefactura.prefactura.ruc}" /></p:column> 
+				        </p:row>
+				        <p:row>  
+				            <p:column><h:outputLabel value="Razón Social:" /></p:column> 
+				            <p:column><h:outputText value="#{formPrefactura.prefactura.cliente == null ? '_____________' : formPrefactura.prefactura.cliente}" /></p:column> 
+				        </p:row>
+				        <p:row>  
+				            <p:column><h:outputLabel value="Dirección:" /></p:column> 
+				            <p:column><h:outputText value="#{formPrefactura.prefactura.direccion == null ? '_____________' : formPrefactura.prefactura.direccion}" /></p:column> 
+				        </p:row>
+						<p:row>  
+				            <p:column><h:outputLabel value="Nro. Liquidación:" /></p:column> 
+			            	<p:column>
+			            		<p:inputText value="#{formPrefactura.prefactura.tb_ordenLiquidacion_id_liquidacion}" rendered="#{formPrefactura.prefactura.idPrefactura == 0}" />
+			            		<h:outputText value="#{formPrefactura.prefactura.tb_ordenLiquidacion_id_liquidacion}" rendered="#{formPrefactura.prefactura.idPrefactura != 0}"/>
+		            		</p:column> 
+				        </p:row>
+						<f:facet name="footer">  
+					        <p:row>  
+					            <c:if test="#{formPrefactura.prefactura.idPrefactura == 0}">
+						            <p:column></p:column>  
+						            <p:column>
+						            	<p:commandButton value="Buscar Liquidación" update="panel" action="#{formPrefactura.obtenerDetallePrefactura}" icon="ui-icon-search"/>
+						            	<p:commandButton value="---" action="#{formPrefactura.listarLiquidaciones}" update=":formulario:pnlBuscarLiquidacion" oncomplete="BuscarLiquidacionDialog.show()"/>
+						            </p:column>
+					        	</c:if>
+					        </p:row> 
+					    </f:facet> 
+					</p:panelGrid>
+					
+					<br/><br/>
+					
+					<!-- Detalle PreFactura-->
+            		<p:dataTable id="datatable" var="item" value="#{formPrefactura.detalleprefacturaList}">  
+						<f:facet name="header">  
+					        <p:row>  
+					            <p:column>Detalle Pre-Factura</p:column>  
+					        </p:row> 
+					    </f:facet> 
+						<p:column headerText="Nro. Liq." styleClass="centered"><h:outputText value="#{item.id}"/></p:column>
+				        <p:column headerText="Item" styleClass="centered"><h:outputText value="#{item.item}" /></p:column> 
+						<p:column headerText="Descripción"><h:outputText value="#{item.descripcion}" /></p:column>
+						<p:column headerText="Precio Unitario" style="text-align: right;"><h:outputText value="#{item.precioUnitario}" /></p:column>
+						<p:column headerText="Cantidad" styleClass="centered"><h:outputText value="#{item.cantidad}" /></p:column>
+						<p:column headerText="SubTotal" style="text-align: right;"><h:outputText value="#{item.subtotal}" /></p:column>
+					</p:dataTable>
+					
+					<br/>
+				
+					<p:commandButton value="Salir" action="prefactura" icon="ui-icon-arrowthick-1-w"/>
+					<c:if test="#{formPrefactura.prefactura.idPrefactura == 0}">
+			        	<p:commandButton value="Generar Pre-factura" update=":formulario" action="#{formPrefactura.registrarPrefactura}" icon="ui-icon-check"/>
+				    </c:if>
+				</p:panel>
+				
+				<p:dialog id="dlgBuscarLiquidacion" header="Buscar Liquidación" widgetVar="BuscarLiquidacionDialog" modal="true" height="250">
+					<p:panelGrid id="pnlBuscarLiquidacion" style="margin-top:20px">
+					    <p:row>
+					    	<p:column colspan="5">
+					    		<p:dataTable id="dataTableLiquidacion" value="#{formPrefactura.liquidacionList}" var="item" rules="all">
+					    			<p:column headerText="Nro. Liq"><h:outputText value="#{item.idLiquidacion}"/></p:column>
+					    			<p:column headerText="Fecha">
+					    				<h:outputText value="#{item.fecha}">
+					    					<f:convertDateTime pattern="dd/MM/yyyy"/>
+					    				</h:outputText>
+					    			</p:column>
+					    			<p:column headerText="Nombre"><h:outputText value="#{item.nombre}"/></p:column>
+					    			<p:column headerText="Ruc"><h:outputText value="#{item.idCliente}"/></p:column>
+					    			<p:column headerText="Estado">
+					    				<h:panelGroup rendered="#{item.estado == 0}">
+					    					<h:outputText value="Liquidar" style="color:red"/>
+					    				</h:panelGroup>
+					    				<h:panelGroup rendered="#{item.estado == 1}">
+					    					<h:outputText value="Pre-Factura" style="color:blue"/>
+					    				</h:panelGroup>
+					    			</p:column>
+					    			<p:column headerText="Usuario"><h:outputText value="#{item.usuario}"/></p:column>
+					    			<p:column headerText="Seleccionar">
+										<p:commandLink value="Seleccionar" action="#{formPrefactura.recuperarLiquidacion}" update=":formulario" rendered="#{item.estado == 0}">
+											<f:param name="codigo" value="#{item.idLiquidacion}"/>
+										</p:commandLink>
+										<h:commandLink value="Seleccionar" action="#{formPrefactura.recuperarLiquidacion}" disabled="true" rendered="#{item.estado == 1}"/>
+					    			</p:column>
+								</p:dataTable>
+					    	</p:column>
+					    </p:row> 
+					</p:panelGrid>
+				</p:dialog>
+			</h:form>
+		</ui:define>
+	</ui:composition>
+</body>
+</html>

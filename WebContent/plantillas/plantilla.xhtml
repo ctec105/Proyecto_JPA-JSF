@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+ 	  xmlns:f="http://java.sun.com/jsf/core"   
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:p="http://primefaces.org/ui">
+<h:head>
+	<title></title>
+	<link type="text/css" rel="stylesheet" href="#{request.contextPath}/css/default.css" />
+</h:head>
+<h:body>
+	<div class="ui-widget ui-widget-header">
+		<div id="logo">
+			Sistemas de Mantenimiento Correctivo:  JPA + JSF + PrimeFaces
+			<ui:insert name="header"><ui:include src="/secciones/cabecera.xhtml" /></ui:insert>
+		</div>
+	</div>
+
+	<div id="wrapper">
+		<div id="page">
+			<div id="sidebar1" class="ui-widget-content ui-corner-all ui-helper-clearfix sidebar" style="border: 0;margin-top: 0px;">
+				<ui:insert name="menu"><ui:include src="/secciones/menu.xhtml" /></ui:insert>
+			</div>
+			<div id="content" class="ui-widget">
+				<div class="post">
+					<ui:insert name="body"></ui:insert>
+				</div>
+			</div>
+			<div style="clear: both;">&nbsp;</div>
+		</div>
+	</div>
+		
+	<div id="footer" class="ui-widget ui-widget-header ui-corner-all">
+		<ui:insert name="footer"><ui:include src="/secciones/pie.xhtml" /></ui:insert>
+	</div>
+	
+	<!-- Session TimeOut  -->
+	<p:idleMonitor onactive="sessionTimeOutDialog.show();" timeout="#{session.maxInactiveInterval * 1000}" />
+	<p:dialog header="Sesión Caducada" widgetVar="sessionTimeOutDialog" 
+	 modal="true" fixedCenter="true" closable="false" width="400" visible="false">
+	     <h:outputText value="La sesión ha caducado, por favor, pulse sobre el siguiente motor para volver a acceder a la aplicación" />
+	     <input id="confirmBackToLogin" type="button" value="Volver a acceder a la aplicación"
+	        onclick="window.location='#{facesContext.externalContext.requestContextPath}/faces/inicio.xhtml';" />
+	</p:dialog>
+</h:body>
+</html>

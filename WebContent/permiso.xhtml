@@ -1,0 +1,96 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	  xmlns:f="http://java.sun.com/jsf/core"
+	  xmlns:h="http://java.sun.com/jsf/html"
+	  xmlns:ui="http://java.sun.com/jsf/facelets"
+	  xmlns:p="http://primefaces.org/ui"
+	  xmlns:c="http://java.sun.com/jsp/jstl/core">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1" />
+<title>Registrar Libro</title>
+</head>
+<body>
+	<ui:composition template="/plantillas/plantilla.xhtml">
+		<ui:define name="body">
+			<h:form id="formulario">
+				<p:panel id="panel" header="Gestionar Permisos de la Areas Usuarias">
+					<p:growl id="growl" showDetail="true"/> 
+					
+					<!-- Permisos-->
+					<p:panelGrid id="grid1" style="width:100%; margin-top:20px">
+						<f:facet name="header">  
+					        <p:row>  
+					            <p:column colspan="3">Buscar Permisos</p:column>  
+					        </p:row> 
+					    </f:facet> 
+						<p:row>  
+				            <p:column><h:outputLabel value="Area:" /></p:column> 
+				            <p:column>
+				            	<p:selectOneMenu id="areaper" value="#{formPermiso.area.idArea}" size="1" >
+									<f:selectItems value="#{formPermiso.areaList}" var="areap"
+										itemLabel="#{areap.descripcion}" itemValue="#{areap.idArea}" />
+								</p:selectOneMenu>
+				            </p:column>
+				            <p:column><p:commandButton value="Ver Permisos" update="panel" action="#{formPermiso.obtenerPermisos}" icon="ui-icon-search"/></p:column> 
+				        </p:row>
+						<p:row>  
+				            <p:column colspan="3">¡Las modificaciones afectarán a los usuarios de dichas areas.!</p:column>
+				        </p:row>
+				        <p:row>
+				        	<p:column colspan="3">
+			        		 	<h:panelGroup rendered="#{formPermiso.mostrar}">
+					        		<p:dataTable id="multiPermisos" var="item" value="#{formPermiso.mediumPermisosModel}" 
+				            			selection="#{formPermiso.selectedPermisos}">  
+										<f:facet name="header">
+											Permisos Asignados al area de: 
+											<h:panelGroup rendered="#{formPermiso.area.idArea == 1}">Liquidación</h:panelGroup>
+											<c:if test="#{formPermiso.area.idArea == 2}">Comercial</c:if>
+											<c:if test="#{formPermiso.area.idArea == 3}">Post-Ventas</c:if>
+											<c:if test="#{formPermiso.area.idArea == 4}">Sistemas</c:if>
+										</f:facet>
+										<p:column headerText="Id"><h:outputText value="#{item.tbMenu.idMenu}"/></p:column>
+								        <p:column headerText="Título">
+									        <h:panelGroup rendered="#{item.tbMenu.nivel.length() == 1}">
+									        	<h:outputText value="#{item.tbMenu.titulo}" style="color:red;" />
+									        </h:panelGroup>
+									        <h:panelGroup rendered="#{item.tbMenu.nivel.length() > 1}">
+									        	<h:outputText value="#{item.tbMenu.titulo}" style="color:blue;" />
+									        </h:panelGroup>
+								        </p:column> 
+										<p:column headerText="¿Permitido?">
+										
+										<h:panelGroup rendered="#{item.ver == 'S'}">
+											<h:outputText value="Si" style="color:blue"/>
+										</h:panelGroup>
+										<h:panelGroup rendered="#{item.ver == 'N'}">
+											<h:outputText value="No" style="color:red"/>
+										</h:panelGroup>
+										</p:column>
+										<p:column selectionMode="multiple" checked="true"  style="width:2%;" />  
+										<f:facet name="footer">
+											<p:commandButton value="Actualizar Permisos" update=":formulario:displayMulti" oncomplete="multiOrdenDialog.show()" icon="ui-icon-check"/>
+										</f:facet>
+									</p:dataTable>
+				        		</h:panelGroup>
+				        	</p:column>
+				        </p:row>
+					</p:panelGrid>
+					
+					<!-- Permisos Seleccionados seleccioadas -->
+					<p:dialog id="multiDialog" header="Permisos Seleccionados" widgetVar="multiOrdenDialog" height="300" showEffect="fade" hideEffect="explode"> 
+		            	<p:dataTable id="displayMulti" value="#{formPermiso.selectedPermisos}" var="item">
+							<p:column headerText="Id"><h:outputText value="#{item.tbMenu.idMenu}"/></p:column>
+					        <p:column headerText="Titulo"><h:outputText value="#{item.tbMenu.titulo}" /></p:column> 
+							<p:column headerText="¿Permitido?"><h:outputText value="#{item.ver}" /></p:column>
+							<f:facet name="footer">
+								<p:commandButton value="Confirmar" update=":formulario" action="#{formPermiso.modificarPermisos}" icon="ui-icon-check" style="float:left"/>
+							</f:facet>
+						</p:dataTable>
+	              	</p:dialog>
+				</p:panel>
+			</h:form>
+		</ui:define>
+	</ui:composition>
+</body>
+</html>

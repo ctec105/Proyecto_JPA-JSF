@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	  xmlns:f="http://java.sun.com/jsf/core"
+	  xmlns:h="http://java.sun.com/jsf/html"
+	  xmlns:ui="http://java.sun.com/jsf/facelets"
+	  xmlns:p="http://primefaces.org/ui"
+	  xmlns:c="http://java.sun.com/jsp/jstl/core">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1" />
+<title>Cambiar Contraseña</title>
+</head>
+<body>
+	<ui:composition template="/plantillas/plantilla.xhtml">
+		<ui:define name="body">
+			<h:form id="formulario">
+				<p:panel id="panel" header="Cambiar Contraseña">
+					<p:growl id="msgs" showDetail="true"/> 
+					
+					<!-- Datos del Usuario-->
+					<p:panelGrid id="grid1" style="width:100%; margin-top:20px">
+						<f:facet name="header">  
+					        <p:row>  
+					            <p:column colspan="2">Ingrese los siguientes datos</p:column>  
+					        </p:row> 
+					    </f:facet> 
+					    <p:row>  
+				            <p:column style="width:25%;"><h:outputLabel value="Nombre de Usuario:" /></p:column> 
+				            <p:column style="width:75%;"><p:inputText value="#{formUsuario.usuario.login}" disabled="true"/></p:column> 
+				        </p:row>
+				        <p:row>  
+				            <p:column><h:outputLabel value="Contraseña:" /></p:column> 
+				            <p:column><p:inputText value="#{formUsuario.usuario.password}"/></p:column> 
+				        </p:row>
+				        <p:row>  
+				            <p:column><h:outputLabel value="Nueva Contraseña:" /></p:column> 
+				            <p:column><p:password id="EspanishFeedback1" value="#{formUsuario.newPass}" feedback="true" promptLabel="Por favor, introduzca una contraseña" weakLabel="Débil" goodLabel="Medio" strongLabel="Bueno" /></p:column> 
+				        </p:row>
+				        <p:row>  
+				            <p:column><h:outputLabel value="Repetir Contraseña:" /></p:column> 
+				            <p:column><p:password id="EspanishFeedback2" value="#{formUsuario.confPass}" feedback="true" promptLabel="Por favor, repita su contraseña" weakLabel="Débil" goodLabel="Medio" strongLabel="Bueno" /></p:column> 
+				        </p:row>
+						<f:facet name="footer">  
+					        <p:row>  
+					            <p:column colspan="2"><p:commandButton value="Actualizar Contraseña" update="panel" action="#{formUsuario.cambiarContraseña}" icon="ui-icon-check"/></p:column>
+					        </p:row> 
+					    </f:facet> 
+					</p:panelGrid>
+				</p:panel>
+			</h:form>
+		</ui:define>
+	</ui:composition>
+</body>
+</html>

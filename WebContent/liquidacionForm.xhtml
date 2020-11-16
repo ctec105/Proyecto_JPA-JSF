@@ -1,0 +1,162 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	  xmlns:f="http://java.sun.com/jsf/core"
+	  xmlns:h="http://java.sun.com/jsf/html"
+	  xmlns:ui="http://java.sun.com/jsf/facelets"
+	  xmlns:p="http://primefaces.org/ui"
+	  xmlns:c="http://java.sun.com/jsp/jstl/core">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1" />
+<title>Registrar Libro</title>
+</head>
+<body>
+	<ui:composition template="/plantillas/plantilla.xhtml">
+		<ui:define name="body">
+			<h:form id="formulario">
+				<p:panel id="panel" header="#{formLiquidacion.liquidacion.idLiquidacion == 0 ? 'Nueva Orden de Liquidación' : 'Detalle Orden de Liquidación'}">
+					<p:messages id="msgs"/>
+					
+					<!-- Datos de la Orden de Liquidación-->
+					<p:panelGrid id="grid1" style="width:100%; margin-top:20px">
+						<f:facet name="header">  
+					        <p:row>  
+					            <p:column colspan="2">Datos de la Orden de Liquidación</p:column>  
+					        </p:row> 
+					    </f:facet> 
+					    <c:if test="#{formLiquidacion.liquidacion.idLiquidacion != 0}">
+						    <p:row>  
+					            <p:column style="width:25%;"><h:outputLabel value="Nro. Liquidación:" /></p:column> 
+					            <p:column style="width:75%;"><h:outputText value="#{formLiquidacion.liquidacion.idLiquidacion}"/></p:column> 
+					        </p:row>
+					        <p:row>  
+					            <p:column><h:outputLabel value="Estado:" /></p:column> 
+					            <p:column><h:outputText value="#{formLiquidacion.liquidacion.estado == 0 ? 'Liquidar' : 'Pre-Factura'}" /></p:column> 
+					        </p:row>
+				        </c:if>
+					    <p:row>  
+				            <p:column><h:outputLabel value="Usuario:" /></p:column> 
+				            <p:column><h:outputText value="#{formLiquidacion.liquidacion.usuario}"/></p:column> 
+				        </p:row>
+				        <p:row>  
+				            <p:column><h:outputLabel value="Nombre:" /></p:column> 
+				            <p:column><h:outputText value="#{formLiquidacion.liquidacion.nombre}"/></p:column> 
+				        </p:row>
+						<p:row>  
+				            <p:column><h:outputLabel value="Fecha:" /></p:column> 
+				            <p:column>
+				            	<h:outputText value="#{formLiquidacion.liquidacion.fecha}">
+				            		<f:convertDateTime type="date" pattern="dd/MM/yyyy"/>
+				            	</h:outputText>
+				            </p:column> 
+				        </p:row>
+						<p:row>  
+				            <p:column><h:outputLabel value="Ruc Cliente:" /></p:column> 
+				            <c:if test="#{formLiquidacion.liquidacion.idLiquidacion == 0}">
+				            	<p:column><p:inputText value="#{formLiquidacion.liquidacion.idCliente}" /></p:column>
+				            </c:if>
+				             <c:if test="#{formLiquidacion.liquidacion.idLiquidacion != 0}">
+				            	<p:column><h:outputText value="#{formLiquidacion.liquidacion.idCliente}"/></p:column>
+				            </c:if>
+				        </p:row>
+						<f:facet name="footer">  
+					        <p:row>  
+					        	<c:if test="#{formLiquidacion.liquidacion.idLiquidacion == 0}">
+						            <p:column></p:column>  
+						            <p:column>
+						            	<p:commandButton value="Obtener Ordenes" update="panel" action="#{formLiquidacion.obtenerOrdenes}" icon="ui-icon-search"/>
+					            		<p:commandButton value="---" action="#{formLiquidacion.buscarCliente}" update=":formulario:pnlBuscarCliente" oncomplete="BuscarClienteDialog.show()"/>
+					            	</p:column>
+					       		</c:if>
+					        </p:row> 
+					    </f:facet> 
+					</p:panelGrid>
+					
+					<br/><br/>
+					
+					<!-- Datos de las Ordenes de trabajo pendientes -->
+            		<p:dataTable id="multiOrdenes" var="item" value="#{formLiquidacion.mediumOrdenesModel}" 
+            			paginator="true" rows="10" selection="#{formLiquidacion.selectedOrdenes}">  
+				        <f:facet name="header">  
+					        <p:row>  
+					            <p:column rendered="#{formLiquidacion.liquidacion.idLiquidacion == 0}">Ordenes de Trabajo Pendientes</p:column>  
+								<p:column rendered="#{formLiquidacion.liquidacion.idLiquidacion != 0}">Ordenes de Trabajo Liquidadas</p:column>  
+					        </p:row> 
+					    </f:facet> 
+						<p:column headerText="Nro. Orden" styleClass="centered"><h:outputText value="#{item.idOtrabajo}"/></p:column>
+				        <p:column headerText="Fecha Inicio" styleClass="centered">
+				        	<h:outputText value="#{item.fechaInicio}">
+				        		<f:convertDateTime pattern="dd/MM/yyyy" />
+				        	</h:outputText>
+				        </p:column>  
+				        <p:column headerText="Fecha Termino" styleClass="centered">
+				        	<h:outputText value="#{item.fechaTermino}">
+				        		<f:convertDateTime pattern="dd/MM/yyyy"/>
+				        	</h:outputText>
+				        </p:column> 
+				        <p:column headerText="Comentarios"><h:outputText value="#{item.comentarios}" /></p:column> 
+						<p:column headerText="Nro. S.S" styleClass="centered"><h:outputText value="#{item.tbSolicitudIdSolicitud}" /></p:column>
+						<p:column selectionMode="multiple" styleClass="centered"/>  
+					</p:dataTable>
+					
+					<br/>
+					
+					<p:commandButton value="Salir" action="liquidacion" icon="ui-icon-arrowthick-1-w"/>
+					<p:commandButton value="Agregar Ordenes" update=":formulario:dtbOrdenesSeleccionadas" oncomplete="OrdenesSeleccionadasDialog.show()" icon="ui-icon-add" rendered="#{formLiquidacion.liquidacion.idLiquidacion == 0}"/>
+						        
+					<!-- Modales -->
+					<p:dialog id="dlgBuscarCliente" header="Buscar Cliente" widgetVar="BuscarClienteDialog" modal="true" height="250">
+						<p:panelGrid id="pnlBuscarCliente" style="margin-top:20px">
+					        <p:row>  
+					            <p:column><h:outputLabel value="Ruc:" /></p:column>  
+					            <p:column><p:inputText value="#{formLiquidacion.rucCli}"/></p:column>  
+					            <p:column><h:outputLabel value="Nombre/Razon Social" /></p:column>  
+					            <p:column><p:inputText value="#{formLiquidacion.razCli}"/></p:column>
+					            <p:column><p:commandButton value="Buscar" action="#{formLiquidacion.buscarCliente}" update="dtbClientes" icon="ui-icon-search"/></p:column>
+						    </p:row>  
+						    <p:row>
+						    	<p:column colspan="5">
+						    		<p:dataTable id="dtbClientes" value="#{formLiquidacion.clienteList}" var="item" rules="all">
+						    			<p:column headerText="Ruc"><h:outputText value="#{item.idCliente}"/></p:column>
+						    			<p:column headerText="Razón Social"><h:outputText value="#{item.razonsocial}"/></p:column>
+						    			<p:column headerText="Dirección"><h:outputText value="#{item.direccion}"/></p:column>
+						    			<p:column headerText="Telefono"><h:outputText value="#{item.telefono}"/></p:column>
+						    			<p:column headerText="">
+											<h:commandLink value="Seleccionar" action="#{formLiquidacion.recuperarCliente}">
+												<f:param name="codigo" value="#{item.idCliente}"/>
+											</h:commandLink>
+						    			</p:column>
+									</p:dataTable>
+						    	</p:column>
+						    </p:row> 
+						</p:panelGrid>
+					</p:dialog>
+					
+					<p:dialog id="multiDialog" header="Ordenes de Trabajo Seleccionadas" widgetVar="OrdenesSeleccionadasDialog" height="300" showEffect="fade" hideEffect="explode"> 
+		            	<p:dataTable id="dtbOrdenesSeleccionadas" value="#{formLiquidacion.selectedOrdenes}" var="item" paginator="true" rows="10">
+							<p:column headerText="Nro. Orden" styleClass="centered"><h:outputText value="#{item.idOtrabajo}"/></p:column>
+					        <p:column headerText="Fecha Inicio" styleClass="centered">
+					        	<h:outputText value="#{item.fechaInicio}">
+					        		<f:convertDateTime pattern="dd/MM/yyyy" />
+					        	</h:outputText>
+					        </p:column>  
+					        <p:column headerText="Fecha Termino" styleClass="centered">
+					        	<h:outputText value="#{item.fechaTermino}">
+					        		<f:convertDateTime pattern="dd/MM/yyyy"/>
+					        	</h:outputText>
+					        </p:column> 
+					        <p:column headerText="Comentarios"><h:outputText value="#{item.comentarios}" /></p:column> 
+							<p:column headerText="ID Solicitud" styleClass="centered"><h:outputText value="#{item.tbSolicitudIdSolicitud}" /></p:column>
+							<f:facet name="footer">
+								<p:column styleClass="centered">
+									<p:commandButton value="Grabar" update=":formulario" action="#{formLiquidacion.guardar}" icon="ui-icon-check" />
+								</p:column>
+							</f:facet>
+						</p:dataTable>
+	              	</p:dialog>
+				</p:panel>
+			</h:form>
+		</ui:define>
+	</ui:composition>
+</body>
+</html>

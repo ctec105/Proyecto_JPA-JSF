@@ -1,0 +1,44 @@
+Pruebas para listar el menú de diferentes maneras
+			
+			<!-- Menú estático -->
+			<!-- <p:panelMenu id="panelMenu" style="width:230px">
+		        <p:submenu label="Opciones">
+		            <p:menuitem value="Inicio" action="menuBlanco" actionListener="#{menu.menuIni}" update="messages" icon="ui-icon-home" />
+		            <p:menuitem value="Solicitud de Servicio" action="#{solicitud.listarSoliccitudes}" actionListener="#{menu.listSol}" update="messages" icon="ui-icon-star"/>
+		        	<p:menuitem value="Orden de Trabajo" action="#{formOrden.listarOrdenes}" actionListener="#{menu.listOrd}" update="messages" icon="ui-icon-star"/>
+		        	<p:menuitem value="Orden de Liquidación" action="#{formLiquidacion.listarLiquidaciones}" actionListener="#{menu.listLiq}" update="messages" icon="ui-icon-star"/>
+		        	<p:menuitem value="PreFactura" action="#{formPrefactura.listarPrefacturas}" actionListener="#{menu.listPre}" update="messages" icon="ui-icon-star"/>
+		        </p:submenu>
+		   
+		   		<p:submenu label="Tablas">
+		            <p:menuitem value="Usuarios" action="#{formUsuario.listarUsuarios}" actionListener="#{menu.listUsu}" update="messages" icon="ui-icon-star" />
+		            <p:menuitem value="Clientes" action="#{formCliente.listarClientes}" actionListener="#{menu.listCli}" update="messages" icon="ui-icon-star"/>
+		        	<p:menuitem value="Permisos" action="#{formPermiso.inicializar}" actionListener="#{menu.listPer}" update="messages" icon="ui-icon-star"/>
+		        	<p:menuitem value="Paquetes" action="#{formPaquete.listarPaquetes}" actionListener="#{menu.listPaq}" update="messages" icon="ui-icon-star"/>
+		        </p:submenu>
+		        
+		        <p:submenu label="Sesión">  
+		            <p:menuitem value="Cambiar Contraseña" action="#{formUsuario.irAcambiarContraseña}" actionListener="#{menu.cambioC}" update="messages" icon="ui-icon-star">
+		            	<f:param name="login" value="#{login.usuario.login}" />
+		            </p:menuitem>  
+		            <p:menuitem value="Cerrar Sesión" action="#{login.CerrarSession}" actionListener="#{menu.cerrarS}" update="messages" icon="ui-icon-arrowrefresh-1-w"/>  
+		        </p:submenu>
+		        
+		        <p:submenu label="Reportes">  
+		            <p:menuitem value="Reportes" action="menuBlanco" actionListener="#{menu.reporte}" icon="ui-icon-document"/>  
+		        </p:submenu> 
+		    </p:panelMenu> -->
+		
+		
+		
+			<!-- Usando ui:repeat -->
+			
+			<!-- <ui:repeat value="#{login.areamenuList}" var="item" varStatus="estado">
+				<h:outputText value="#{item.tbMenu.titulo}"/> <br/> 
+			</ui:repeat> -->
+		
+MenuPanel PRIMEFACES menu dinámico Ajax
+https://respostas.guj.com.br/5926-menu-dinamico-primefaces---menubar			
+			
+Iconos UI JQuery
+https://api.jqueryui.com/resources/icons-list.html

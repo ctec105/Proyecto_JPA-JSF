@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	  xmlns:f="http://java.sun.com/jsf/core"
+	  xmlns:h="http://java.sun.com/jsf/html"
+	  xmlns:ui="http://java.sun.com/jsf/facelets"
+	  xmlns:p="http://primefaces.org/ui"
+	  xmlns:c="http://java.sun.com/jsp/jstl/core">
+<h:head>
+</h:head>
+<h:body>
+	<ui:composition template="/plantillas/plantilla.xhtml">
+		<ui:define name="body">
+    		<h:form id="frmUsuario" rendered="#{not empty formUsuario.usuarioList}">
+    			<h2 class="centered">Mantenimiento de Usuarios</h2>
+    		
+			    <h:commandLink id="cmdRegistrar" action="#{formUsuario.edit}">
+			    	<p:graphicImage value="imagenes/iconos/add.png" title="Registrar un nuevo Usuario" width="20"/>
+					<h:outputLabel value="Registrar un nuevo Usuario" />
+				</h:commandLink>
+				
+				<br/><br/>
+			    
+			    <p:dataTable id="dtbUsuarios" value="#{formUsuario.mediumUsuariosModel}" var="item" paginator="true" rows="10"   
+			                 selection="#{formUsuario.usuario}" selectionMode="single">  
+			        <!-- <f:facet name="header">
+			            Seleccione una fila para ver su detalle 
+			        </f:facet>  --> 
+			        <p:column headerText="Id" styleClass="centered">#{item.idUsuario}</p:column>  
+			        <p:column headerText="Usuario">#{item.nombre} #{item.apePat} #{item.apeMat}</p:column>
+			        <p:column headerText="Fecha Ingreso" styleClass="centered">
+			        	<h:outputText value="#{item.fechaIngreso}">
+							<f:convertDateTime pattern="dd/MM/yyyy" />
+						</h:outputText>
+			        </p:column> 
+					<p:column headerText="Opciones" styleClass="centered">
+						<h:commandLink id="cmdEditar" action="#{formUsuario.edit}">
+							<f:param name="codigo" value="#{item.idUsuario}"/>
+							<p:graphicImage value="imagenes/iconos/table_edit.png" title="Editar" width="20"/>
+						</h:commandLink>
+						<p:commandLink id="cmdEliminar" action="#{formUsuario.eliminar}" update=":frmUsuario">
+							<f:param name="codigo" value="#{item.idUsuario}"/>
+							<p:graphicImage value="imagenes/iconos/table_delete.png" title="Eiminar" width="20"/>
+						</p:commandLink>
+						<h:panelGroup rendered="#{item.estado == 0}">
+							<p:commandLink id="cmdBloquear" action="#{formUsuario.bloquear}" update=":frmUsuario">
+								<f:param name="codigo" value="#{item.idUsuario}"/>
+								<p:graphicImage value="imagenes/iconos/status_online.png" title="Bloquear" width="20"/>
+							</p:commandLink>
+						</h:panelGroup>
+						<h:panelGroup rendered="#{item.estado == 1}">
+							<p:commandLink id="cmdDesbloquear" action="#{formUsuario.desbloquear}" update=":frmUsuario">
+								<f:param name="codigo" value="#{item.idUsuario}"/>
+								<p:graphicImage value="imagenes/iconos/status_offline.png" title="Desbloquear" width="20"/>
+							</p:commandLink>
+						</h:panelGroup>
+					</p:column>
+					
+			    	<p:ajax event="rowSelect" listener="#{formUsuario.onRowSelect}"   
+                    	update=":frmUsuario:pnlDetalle :frmUsuario:growlUsuario" oncomplete="carDialog.show()" />  
+        			<p:ajax event="rowUnselect" listener="#{formUsuario.onRowUnselect}" 
+        				update=":frmUsuario:growlUsuario"/>
+			    </p:dataTable>  
+			    
+			    <!-- Growl Primefaces-->
+			    <p:growl id="growlUsuario" showDetail="true"/>
+			    
+			    <!-- Dialog Primefaces -->
+		        <p:dialog id="dlgDetalle" header="Detalle" widgetVar="carDialog" resizable="false" showEffect="fade" hideEffect="explode">
+			        <h:panelGrid id="pnlDetalle" columns="2" cellpadding="4">
+			            <f:facet name="header">
+			                <p:graphicImage value="imagenes/iconos/solicitud.png"/>
+			            </f:facet>
+			
+			            <h:outputLabel value="Id:" />
+			            <h:outputText value="#{formUsuario.usuario.idUsuario}" />
+			            
+			            <h:outputLabel value="Nombre:" />
+			            <h:outputText value="#{formUsuario.usuario.nombre}" />
+			            
+			            <h:outputLabel value="Apellido P." />
+			            <h:outputText value="#{formUsuario.usuario.apePat}" />
+			            
+			            <h:outputLabel value="Apellido M." />
+			            <h:outputText value="#{formUsuario.usuario.apeMat}" />
+			            
+   			            <h:outputLabel value="Fecha Ingreso:" />
+			            <h:outputText value="#{formUsuario.usuario.fechaIngreso}">
+			            	<f:convertDateTime pattern="dd/MM/yyyy" />
+			            </h:outputText>
+			            
+			            <h:outputLabel value="Estado:" />
+		            	<h:outputLabel value="Activo" rendered="#{formUsuario.usuario.estado == 0}"/>
+		            	<h:outputLabel value="Desactivado" rendered="#{formUsuario.usuario.estado == 1}"/>
+		            	
+		            	<h:outputLabel value="Area:" />
+		            	<h:outputLabel value="Liquidación" rendered="#{formUsuario.usuario.tbAreaIdArea == 1}"/>
+		            	<h:outputLabel value="Comercial" rendered="#{formUsuario.usuario.tbAreaIdArea == 2}"/>
+		            	<h:outputLabel value="Post-Venta" rendered="#{formUsuario.usuario.tbAreaIdArea == 3}"/>
+		            	<h:outputLabel value="Sistemas" rendered="#{formUsuario.usuario.tbAreaIdArea == 4}"/>
+			        </h:panelGrid>
+			    </p:dialog> 
+	        </h:form>   
+			<h:panelGroup rendered="#{empty formUsuario.usuarioList}">
+				<p>¡La Tabla está vacía! Por favor agregar nuevos Usuarios.</p>
+			</h:panelGroup>
+		</ui:define>
+	</ui:composition>
+</h:body>
+</html>

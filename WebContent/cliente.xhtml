@@ -1,0 +1,83 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	  xmlns:f="http://java.sun.com/jsf/core"
+	  xmlns:h="http://java.sun.com/jsf/html"
+	  xmlns:ui="http://java.sun.com/jsf/facelets"
+	  xmlns:p="http://primefaces.org/ui"
+	  xmlns:c="http://java.sun.com/jsp/jstl/core">
+<h:head>
+</h:head>
+<h:body>
+	<ui:composition template="/plantillas/plantilla.xhtml">
+		<ui:define name="body">
+    		<h:form id="frmCliente" rendered="#{not empty formCliente.clienteList}">
+    			<h2 class="centered">Mantenimiento de Clientes</h2>
+    			
+			    <h:commandLink id="cmdRegistrar" action="#{formCliente.edit}">
+			    	<p:graphicImage value="imagenes/iconos/add.png" title="Registrar un nuevo Cliente" width="20"/>
+					<h:outputLabel value="Registrar un nuevo Cliente" />
+				</h:commandLink>
+				
+				<br/><br/>
+				 
+			    <p:dataTable id="dtbCliente" value="#{formCliente.mediumClientesModel}" var="item" paginator="true" rows="10"   
+			                 selection="#{formCliente.cliente}" selectionMode="single">  
+			        <!-- <f:facet name="header">  
+			            Seleccione una fila para mostrar un mensaje 
+			        </f:facet>   -->
+        
+			        <p:column headerText="Id" styleClass="centered">#{item.idCliente}</p:column>  
+			        <p:column headerText="Razón Social">#{item.razonsocial}</p:column>
+			        <p:column headerText="Dirección">#{item.direccion}</p:column>
+			        <p:column headerText="Telefono">#{item.telefono}</p:column>
+					<p:column headerText="Opciones" styleClass="centered">
+						<h:commandLink id="cmdEditar" action="#{formCliente.edit}">
+							<f:param name="codigo" value="#{item.idCliente}"/>
+							<p:graphicImage value="imagenes/iconos/table_edit.png" title="Editar" width="20"/>
+						</h:commandLink>
+						<h:commandLink id="cmdEliminar" action="#{formCliente.eliminar}">
+							<f:param name="codigo" value="#{item.idCliente}"/>
+							<p:graphicImage value="imagenes/iconos/table_delete.png" title="Eliminar" width="20"/>
+						</h:commandLink>
+					</p:column> 
+					
+					<p:ajax event="rowSelect" listener="#{formCliente.onRowSelect}"   
+                    	update=":frmCliente:pnlDetalle :frmCliente:growlCliente" oncomplete="carDialog.show()" />  
+        			<p:ajax event="rowUnselect" listener="#{formCliente.onRowUnselect}" 
+        				update=":frmCliente:growlCliente"/>  
+			    </p:dataTable>
+			    
+			    <!-- Growl Primefaces-->
+			    <p:growl id="growlCliente" showDetail="true"/> 
+			    
+			    <!-- Dialog Primefaces -->
+		        <p:dialog id="dlgDetalle" header="Cliente Detalle" widgetVar="carDialog" resizable="false" 
+		        		  showEffect="fade" hideEffect="explode">
+			        <h:panelGrid id="pnlDetalle" columns="2" cellpadding="4">
+			            <f:facet name="header">
+			                <p:graphicImage value="imagenes/iconos/solicitud.png"/>
+			            </f:facet>
+			
+			            <h:outputLabel value="Id:" />
+			            <h:outputText value="#{formCliente.cliente.idCliente}" />
+			            
+			            <h:outputLabel value="Razón Social:" />
+			            <h:outputText value="#{formCliente.cliente.razonsocial}" />
+			            
+			            <h:outputLabel value="Dirección:" />
+			            <h:outputText value="#{formCliente.cliente.direccion}" />
+			            
+			            <h:outputLabel value="Telefono:" />
+			            <h:outputText value="#{formCliente.cliente.telefono}" />
+			        </h:panelGrid>
+			    </p:dialog> 
+	        </h:form>   
+			<h:panelGroup rendered="#{empty formCliente.clienteList}">
+				<p>¡La Tabla está vacía! Por favor agregar nuevos Clientes.</p>
+			</h:panelGroup>
+		</ui:define>
+	</ui:composition>
+</h:body>
+</html>

@@ -1,0 +1,156 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	  xmlns:f="http://java.sun.com/jsf/core"
+	  xmlns:h="http://java.sun.com/jsf/html"
+	  xmlns:ui="http://java.sun.com/jsf/facelets"
+	  xmlns:p="http://primefaces.org/ui"
+	  xmlns:jsp="http://java.sun.com/JSP/Page"
+	  xmlns:c="http://java.sun.com/jsp/jstl/core">
+<head>
+	<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1" />
+	<title>Solicitud de Servicio</title>
+</head>
+<body>
+	<ui:composition template="/plantillas/plantilla.xhtml">
+		<ui:define name="body">
+			<h:form id="form2">
+				<p:panel id="panel1" header="#{solicitud.item.idSolicitud == null ? 'Registrar Solicitud de Servicio Comercial' : 'Actualizar Solicitud de Servicio Comercial'}">
+					<p:messages id="msgs"/>
+					
+			   		<h:panelGrid id="pnlBusqueda" columns="4">
+						<h:outputLabel value="Número de Tarjeta: *" />
+				        <p:inputText id="txtNúmeroTarjeta" value="#{solicitud.buscTarjeta}"/>
+			        	<p:commandButton value="Obtener Datos" update="panel1" action="#{solicitud.ObtenerEquipo}" icon="ui-icon-check" style="margin:0"/>
+						<p:commandButton value="..." action="#{solicitud.buscarEquipos}" update=":form2:pnlBuscarEquipo" oncomplete="BuscarEquipoDialog.show()" style="margin:0" />
+					</h:panelGrid>
+					
+					<!-- <h:panelGroup rendered="#{solicitud.flag}"> -->
+			    	<p:panelGrid id="pnlEquipo" style="width: 100%; margin-top:20px">  
+				        <f:facet name="header">  
+				        	<p:row><p:column colspan="4">Datos del Equipo</p:column></p:row>  
+				        </f:facet>
+				        <p:row>  
+				            <p:column>Nro. Tarjeta</p:column>
+				            <p:column>Nro. Serie</p:column>  
+				            <p:column>Clase</p:column>  
+				            <p:column>Modelo</p:column>  
+				        </p:row>  
+					    <p:row rendered="#{solicitud.flag}">  
+				            <p:column><h:outputText value="#{solicitud.item.tbEquipo.nrotarjeta}" /></p:column>  
+				            <p:column><h:outputText value="#{solicitud.item.tbEquipo.nroserie}" /></p:column>  
+				            <p:column><h:outputText value="#{solicitud.item.tbEquipo.tbClaseequipo.descripcion}" /></p:column>  
+				            <p:column><h:outputText value="#{solicitud.item.tbEquipo.tbModelo.descripcion}" /></p:column>  
+					  	</p:row>
+					</p:panelGrid>    
+					
+					<br/>
+					
+					<p:panelGrid id="pnlCliente" style="width: 100%; margin-top:20px">    
+					    <f:facet name="header">
+					    	<p:row><p:column colspan="4">Datos del Cliente</p:column></p:row>
+					    </f:facet>
+					    <p:row>  
+					        <p:column>Ruc.</p:column>  
+				            <p:column>Razon Social</p:column>  
+				            <p:column>Dirección</p:column>  
+				            <p:column>Teléfono</p:column>    
+    					</p:row>
+					    <p:row rendered="#{solicitud.flag}">  
+				            <p:column><h:outputText value="#{solicitud.item.tbEquipo.tbCliente.idCliente}" /></p:column>  
+				            <p:column><h:outputText value="#{solicitud.item.tbEquipo.tbCliente.razonsocial}" /></p:column>  
+				            <p:column><h:outputText value="#{solicitud.item.tbEquipo.tbCliente.direccion}" /></p:column>  
+				            <p:column><h:outputText value="#{solicitud.item.tbEquipo.tbCliente.telefono}" /></p:column>  
+				        </p:row> 
+					</p:panelGrid>
+					<!-- </h:panelGroup> -->
+				
+					<p:panelGrid id="pnlSolicitud" style="width:100%; margin-top:20px">
+						<f:facet name="header">  
+					        <p:row>  
+					            <p:column colspan="2">Datos de la Solicitud</p:column>  
+					        </p:row> 
+					    </f:facet> 
+					    <p:row rendered="#{solicitud.item.idSolicitud != null}">
+					    	<p:column style="width:30%;"><h:outputLabel value="Nro. Solicitud:" /></p:column>  
+					    	<p:column style="width:70%;"><h:outputText id="txtIdsolicitud" value="#{solicitud.item.idSolicitud}" /></p:column>  
+					    </p:row>
+					    <p:row rendered="#{solicitud.item.idSolicitud != null}">
+					    	<p:column><h:outputLabel value="Estado de la Solicitud:" /></p:column>  
+					    	<p:column>
+					    		<h:outputText value="En Espera" rendered="#{solicitud.item.estado == 1}" />
+					            <h:outputText value="En Proceso" rendered="#{solicitud.item.estado == 2}"/>
+					            <h:outputText value="Finalizada" rendered="#{solicitud.item.estado == 3}" />
+					    	</p:column>  
+					    </p:row>
+			            <p:row>
+					    	<p:column><h:outputLabel value="Fecha de Registro: *" /></p:column>  
+					    	<p:column><p:calendar id="txtFecha" value="#{solicitud.item.fecha}" pattern="dd/MM/yyyy" showOn="button"/></p:column>  
+					    </p:row>
+			            <p:row>
+					    	<p:column><h:outputLabel value="Horometro Actual: *" /></p:column>  
+					    	<p:column><p:inputText id="txtHorometro" value="#{solicitud.item.horometroActual}"/></p:column>  
+					    </p:row>
+			            <p:row>
+					    	<p:column><h:outputLabel value="Representante: *" /></p:column>  
+					    	<p:column><p:inputText id="txtRepresentante" value="#{solicitud.item.representante}"/></p:column>  
+					    </p:row>
+			            <p:row>
+					    	<p:column><h:outputLabel value="Telefono: *" /></p:column>  
+					    	<p:column><p:inputText id="txtTelefono" value="#{solicitud.item.telefono}"/></p:column>  
+					    </p:row>
+			            <p:row>
+					    	<p:column><h:outputLabel value="Descripción *" /></p:column>  
+					    	<p:column>
+						    	<p:inputTextarea id="txtDescripcion" value="#{solicitud.item.desProblema}" rows="5" cols="30" counter="counter" maxlength="50"       
+							    	counterTemplate=" {0} caracteres restantes." autoResize="false"/>  
+								<h:outputText id="counter" />
+							</p:column>  
+					    </p:row>
+			        </p:panelGrid>
+			        
+			        <br/>
+			        
+			        <p:commandButton value="Salir" action="solicitudServicio" icon="ui-icon-arrowthick-1-w"/>
+		        	<p:commandButton value="#{solicitud.item.idSolicitud == null ? 'Registrar Solicitud' : 'Actualizar Solicitud'}" update="panel1" action="#{solicitud.insertarOActualizar}" icon="ui-icon-check"/>
+				</p:panel>
+				
+		        
+			    <!-- Modales -->
+				<p:dialog id="dlgBuscarEquipo" header="Buscar Equipo" widgetVar="BuscarEquipoDialog" modal="true" height="250">
+					<p:panelGrid id="pnlBuscarEquipo" style="margin-top:20px">
+				        <p:row>  
+				            <p:column><h:outputLabel value="Nro Tarjeta:" /></p:column>  
+				            <p:column><p:inputText id="txtNroTarjeta" value="#{solicitud.nroTarjeta}"/></p:column>  <!-- solicitud.equipo.nrotarjeta -->
+				            <p:column><h:outputLabel value="Clase:" /></p:column>  
+				            <p:column>
+				            	<p:selectOneMenu value="#{solicitud.equipo.tbClaseequipo.id_claseEquipo}" size="1" >
+									<f:selectItems value="#{solicitud.claseequipoList}" var="clase"
+										itemLabel="#{clase.descripcion}" itemValue="#{clase.id_claseEquipo}" />
+								</p:selectOneMenu>
+				            </p:column>
+				            <p:column><p:commandButton id="btnBuscar" value="Buscar" update="dtbEquipos" action="#{solicitud.buscarEquipos}" icon="ui-icon-search"/></p:column>
+					    </p:row>  
+					    <p:row>
+					    	<p:column colspan="5">
+					    		<p:dataTable id="dtbEquipos" value="#{solicitud.equipoList}" var="item" rules="all">
+					    			<p:column headerText="Nro. Tarjeta"><h:outputText value="#{item.nrotarjeta}"/></p:column>
+					    			<p:column headerText="Nro. Serie"><h:outputText value="#{item.nroserie}"/></p:column>
+					    			<p:column headerText="Ruc"><h:outputText value="#{item.tbCliente.idCliente}"/></p:column>
+					    			<p:column headerText="Modelo"><h:outputText value="#{item.tbModelo.descripcion}"/></p:column>
+					    			<p:column headerText="Tipo"><h:outputText value="#{item.tbClaseequipo.descripcion}"/></p:column>
+					    			<p:column headerText="">
+										<p:commandLink id="cmlSeleccionar" value="Seleccionar" action="#{solicitud.recuperarEquipo}" update=":form2">
+											<f:param name="codigo" value="#{item.nrotarjeta}"/>
+										</p:commandLink>
+					    			</p:column>
+								</p:dataTable>
+					    	</p:column>
+					    </p:row> 
+					</p:panelGrid>
+				</p:dialog>
+			</h:form>
+		</ui:define>
+	</ui:composition>
+</body>
+</html>

@@ -1,0 +1,254 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	  xmlns:f="http://java.sun.com/jsf/core"
+	  xmlns:h="http://java.sun.com/jsf/html"
+	  xmlns:ui="http://java.sun.com/jsf/facelets"
+	  xmlns:p="http://primefaces.org/ui"
+	  xmlns:c="http://java.sun.com/jsp/jstl/core">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1" />
+<title>Gestionar Paquetes</title>
+</head>
+<body>
+	<ui:composition template="/plantillas/plantilla.xhtml">
+		<ui:define name="body">
+			<h:form id="formulario">
+				<p:panel id="panel" header="Mantenimiento de Paquetes">
+					<p:messages id="msgs" escape="false"/>
+					
+					<!-- Datos del Paquete-->
+					<p:panelGrid id="pnlPaquete" style="width:100%; margin-top:20px">
+						<f:facet name="header">  
+					        <p:row>  
+					            <p:column colspan="2">Datos del Paquete</p:column>  
+					        </p:row> 
+					    </f:facet> 
+					    <c:if test="#{formPaquete.paquete.idPaquetes != 0}">
+						    <p:row>  
+					            <p:column style="width:25%;"><h:outputLabel value="Código:" /></p:column> 
+					            <p:column style="width:75%;"><p:inputText value="#{formPaquete.paquete.idPaquetes}" disabled="true" /></p:column> 
+					        </p:row>
+					    </c:if>
+					    <p:row>  
+				            <p:column><h:outputLabel value="Nombre:" /></p:column> 
+				            <p:column><p:inputText value="#{formPaquete.paquete.nombre}"/></p:column> 
+				        </p:row>
+				        <p:row>  
+				            <p:column><h:outputLabel value="Marca:" /></p:column> 
+				            <p:column>
+					            <p:selectOneMenu id="cboMarca" value="#{formPaquete.paquete.marca}" size="1" style="width: 202px">
+									<f:selectItems value="#{formPaquete.marcaList}" var="marca"
+										itemLabel="#{marca.descripcion}" itemValue="#{marca.idMarca}" />
+									<p:ajax listener="#{formPaquete.obtenerModelosxMarca}" update="cboModelo" />
+								</p:selectOneMenu>
+							</p:column>
+				        </p:row>
+				        <p:row>  
+				            <p:column><h:outputLabel value="Modelo:" /></p:column> 
+				            <p:column>
+					            <p:selectOneMenu id="cboModelo" value="#{formPaquete.paquete.modelo}" size="1" style="width: 202px">
+									<f:selectItems value="#{formPaquete.modeloList}" var="modelo"
+										itemLabel="#{modelo.descripcion}" itemValue="#{modelo.idModelo}" />
+								</p:selectOneMenu>
+							</p:column>
+				        </p:row>
+				        <p:row>  
+				            <p:column><h:outputLabel value="Duración" /></p:column> 
+				            <p:column><p:inputText value="#{formPaquete.paquete.duracion}"/></p:column> 
+				        </p:row>
+				        <p:row>  
+				            <p:column>
+				            	<h:outputLabel value="Precio" />
+				            </p:column> 
+				            <p:column>
+				            	<p:inputText id="txtPrecio" value="#{formPaquete.paquete.precio}"/>
+				            	&nbsp;&nbsp;
+				            	<p:commandLink action="#{formPaquete.calcularPrecio}" update="txtPrecio">
+				            		<p:graphicImage value="imagenes/iconos/calculator.png" title="Registrar un nuevo Paquete" width="20"/>
+				            	</p:commandLink>
+				            </p:column> 
+				        </p:row>
+						<f:facet name="footer">  
+					        <p:row>  
+					            <c:if test="#{formPaquete.paquete.idPaquetes == 0}">
+						            <p:column colspan="2"><p:commandButton value="Registrar Paquete" update="panel" action="#{formPaquete.grabar}" icon="ui-icon-check"/></p:column>
+					        	</c:if>
+					        	<c:if test="#{formPaquete.paquete.idPaquetes != 0}">
+						            <p:column colspan="2"><p:commandButton value="Actualizar Paquete" update="panel" action="#{formPaquete.grabar}" icon="ui-icon-check"/></p:column>
+					        	</c:if>
+					        </p:row> 
+					    </f:facet> 
+					</p:panelGrid>
+					
+					<!-- Datos de las herramientas -->
+					<p:panelGrid id="pnlHerramienta" style="width:100%; margin-top:20px">
+						<f:facet name="header">  
+					        <p:row>  
+					            <p:column colspan="2">Añadir Herramientas</p:column>  
+					        </p:row> 
+					    </f:facet>
+					    <p:row>  
+			            	<p:column style="width:25%;"><h:outputLabel value="Código Herramienta:" /></p:column>
+			            	<p:column style="width:75%;">
+			            		<p:inputText id="txtCodHerramienta" value="#{formPaquete.buscherra}"/>
+			            		&nbsp;&nbsp;
+			            		<p:commandButton id="btnAgregarHerra" value="Agregar" update="panel" action="#{formPaquete.obtenerHerramienta}" icon="ui-icon-check"/>
+								<p:commandButton id="btnBuscarHerra" value="..." action="#{formPaquete.buscarHerramienta}" update=":formulario:pnlBuscarHerramienta" oncomplete="BuscarHerramientaDialog.show()" />
+			            	</p:column>
+			            </p:row>
+						<p:row>
+			            	<p:column colspan="2">
+			            		<p:dataTable value="#{formPaquete.herramientaList}" var="item" rules="all">
+									<p:column headerText="Id" style="width:20%;" styleClass="centered"><h:outputText value="#{item.idHerramientas}"/></p:column>
+							        <p:column headerText="Nombre" style="width:50%;" ><h:outputText value="#{item.descripcion}" /> </p:column>  
+							        <p:column headerText="Precio" style="width:20%;"  styleClass="centered"><h:outputText value="#{item.precio}" /></p:column> 
+									<p:column headerText="" style="width:10%;" styleClass="centered"><p:graphicImage value="imagenes/iconos/delete.png"/></p:column>
+								</p:dataTable>
+			            	</p:column>
+			            </p:row>
+					</p:panelGrid>
+					
+					<!-- Datos de los materiales -->
+					<p:panelGrid style="width:100%; margin-top:20px">
+						<f:facet name="header">  
+					        <p:row>  
+					            <p:column colspan="3">Añadir Materiales</p:column>  
+					        </p:row> 
+					    </f:facet>
+					    <p:row>  
+			            	<p:column style="width:25%;"><h:outputLabel value="Código Material:" /></p:column>
+			            	<p:column style="width:75%;">
+			            		<p:inputText value="#{formPaquete.buscmate}"/>
+			            		&nbsp;&nbsp;
+			            		<p:commandButton value="Agregar" update="panel" action="#{formPaquete.obtenerMaterial}" icon="ui-icon-check"/>
+			            		<p:commandButton value="..." action="#{formPaquete.buscarMaterial}" update=":formulario:pnlBuscarMaterial" oncomplete="BuscarMaterialDialog.show()"/>
+		            		</p:column>
+			            </p:row>
+			            <p:row>
+			            	<p:column colspan="3">
+			            		<p:dataTable value="#{formPaquete.materialList}" var="item" rules="all">
+									<p:column headerText="Id" style="width:20%;" styleClass="centered"><h:outputText value="#{item.idMateriales}"/></p:column>
+							        <p:column headerText="Nombre" style="width:50%;"><h:outputText value="#{item.descripcion}" /> </p:column>  
+							        <p:column headerText="Precio" style="width:20%;" styleClass="centered"><h:outputText value="#{item.precio}" /></p:column> 
+									<p:column headerText="" style="width:10%;" styleClass="centered"><p:graphicImage value="imagenes/iconos/delete.png"/></p:column>
+								</p:dataTable>
+			            	</p:column>
+			            </p:row>
+			        </p:panelGrid>
+			        
+			        <!-- Datos de las Actividades -->
+					<p:panelGrid style="width:100%; margin-top:20px">
+						<f:facet name="header">  
+					        <p:row>  
+					            <p:column colspan="4">Añadir Actividades</p:column>  
+					        </p:row> 
+					    </f:facet>
+					    <p:row>  
+			            	<p:column style="width:25%;"><h:outputLabel value="Código Actividad:" /></p:column>
+			            	<p:column style="width:75%;">
+			            		<p:inputText value="#{formPaquete.buscacti}"/>
+			            		&nbsp;&nbsp;
+		            			<p:commandButton value="Agregar" update="panel" action="#{formPaquete.obtenerActividad}" icon="ui-icon-check"/>
+		            			<p:commandButton value="..." action="#{formPaquete.buscarActividad}" update=":formulario:pnlBuscarActividad" oncomplete="BuscarActividadDialog.show()" />
+		            		</p:column>
+			            </p:row>
+			            <p:row>
+			            	<p:column colspan="2">
+			            		<p:dataTable value="#{formPaquete.actividadList}" var="item" rules="all">
+									<p:column headerText="Id" style="width:20%;"  styleClass="centered"><h:outputText value="#{item.idActividades}"/></p:column>
+							        <p:column headerText="Nombre" style="width:50%;" ><h:outputText value="#{item.descripcion}" /> </p:column>  
+							        <p:column headerText="Precio" style="width:20%;"  styleClass="centered"><h:outputText value="#{item.precio}" /></p:column> 
+									<p:column headerText="" style="width:10%;"  styleClass="centered"><p:graphicImage value="imagenes/iconos/delete.png"/></p:column>
+								</p:dataTable>
+			            	</p:column>
+			            </p:row>
+			        </p:panelGrid>
+				</p:panel>
+				
+				<!-- Modales -->
+				<p:dialog id="dlgBuscarHerramienta" header="Buscar Herramienta" widgetVar="BuscarHerramientaDialog" modal="true" height="250">
+				    <p:panelGrid id="pnlBuscarHerramienta" style="margin-top:20px">
+				        <p:row>  
+				            <p:column><h:outputLabel value="Nombre:" /></p:column>  
+				            <p:column>
+				            	<p:inputText id="txtDescHerramienta" value="#{formPaquete.nomHerra}"/>
+				            	&nbsp;&nbsp;
+			            		<p:commandButton id="btnBuscarHerramienta" value="Buscar" action="#{formPaquete.buscarHerramienta}" update="dataTableHerra" icon="ui-icon-search"/>
+				            </p:column>  
+					    </p:row>  
+					    <p:row>
+					    	<p:column colspan="2">
+					    		<p:dataTable id="dataTableHerra" value="#{formPaquete.modalHerramientaList}" var="item" rules="all">
+					    			<p:column headerText="Id"><h:outputText value="#{item.idHerramientas}"/></p:column>
+					    			<p:column headerText="Nombre"><h:outputText value="#{item.descripcion}"/></p:column>
+					    			<p:column headerText="Precio"><h:outputText value="#{item.precio}"/></p:column>
+					    			<p:column headerText="Seleccionar">
+										<p:commandLink id="cmdSeleccionarHerra" value="Seleccionar" action="#{formPaquete.recuperarHerramienta}" update=":formulario">
+											<f:param name="codigo" value="#{item.idHerramientas}"/>
+										</p:commandLink>
+					    			</p:column>
+								</p:dataTable>
+					    	</p:column>
+					    </p:row> 
+					</p:panelGrid>
+				</p:dialog>
+				
+				<p:dialog id="dlgBuscarMaterial" header="Buscar Material" widgetVar="BuscarMaterialDialog" modal="true" height="250">
+					<p:panelGrid id="pnlBuscarMaterial" style="margin-top:20px">
+				        <p:row>  
+				            <p:column><h:outputLabel value="Nombre:" /></p:column>  
+				            <p:column>
+				            	<p:inputText id="txtDescMaterial" value="#{formPaquete.nomMate}"/>
+				            	&nbsp;&nbsp;
+				            	<p:commandButton id="btnBuscarMaterial" value="Buscar" action="#{formPaquete.buscarMaterial}" update="dataTableMat" icon="ui-icon-search"/>
+				            </p:column>  
+					    </p:row>  
+					    <p:row>
+					    	<p:column colspan="2">
+					    		<p:dataTable id="dataTableMat" value="#{formPaquete.modalMaterialList}" var="item" rules="all">
+					    			<p:column headerText="Id"><h:outputText value="#{item.idMateriales}"/></p:column>
+					    			<p:column headerText="Nombre"><h:outputText value="#{item.descripcion}"/></p:column>
+					    			<p:column headerText="Precio"><h:outputText value="#{item.precio}"/></p:column>
+					    			<p:column headerText="Seleccionar">
+										<p:commandLink id="cmdSeleccionarMat" value="Seleccionar" action="#{formPaquete.recuperarMaterial}" update=":formulario">
+											<f:param name="codigo" value="#{item.idMateriales}"/>
+										</p:commandLink>
+					    			</p:column>
+								</p:dataTable>
+					    	</p:column>
+					    </p:row> 
+					</p:panelGrid>
+				</p:dialog>
+
+				<p:dialog id="dlgBuscarActividad" header="Buscar Actividad" widgetVar="BuscarActividadDialog" modal="true" height="250">
+					<p:panelGrid id="pnlBuscarActividad" style="margin-top:20px">
+				        <p:row>  
+				            <p:column><h:outputLabel value="Nombre:" /></p:column>  
+				            <p:column>
+				            	<p:inputText id="txtDescAct" value="#{formPaquete.nomAct}"/>
+				            	&nbsp;&nbsp;
+				            	<p:commandButton id="btnBuscarActividad" value="Buscar" action="#{formPaquete.buscarActividad}" update="dataTableAct" icon="ui-icon-search"/>
+				            </p:column>  
+					    </p:row>  
+					    <p:row>
+					    	<p:column colspan="5">
+					    		<p:dataTable id="dataTableAct" value="#{formPaquete.modalActividadList}" var="item" rules="all">
+					    			<p:column headerText="Id"><h:outputText value="#{item.idActividades}"/></p:column>
+					    			<p:column headerText="Nombre"><h:outputText value="#{item.descripcion}"/></p:column>
+					    			<p:column headerText="Precio"><h:outputText value="#{item.precio}"/></p:column>
+					    			<p:column headerText="Seleccionar">
+										<p:commandLink id="cmdSeleccionarAct" value="Seleccionar" action="#{formPaquete.recuperarActividad}" update=":formulario">
+											<f:param name="codigo" value="#{item.idActividades}"/>
+										</p:commandLink>
+					    			</p:column>
+								</p:dataTable>
+					    	</p:column>
+					    </p:row> 
+					</p:panelGrid>
+				</p:dialog>
+			</h:form>
+		</ui:define>
+	</ui:composition>
+</body>
+</html>

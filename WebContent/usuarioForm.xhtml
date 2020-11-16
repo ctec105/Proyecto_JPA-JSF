@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	  xmlns:f="http://java.sun.com/jsf/core"
+	  xmlns:h="http://java.sun.com/jsf/html"
+	  xmlns:ui="http://java.sun.com/jsf/facelets"
+	  xmlns:p="http://primefaces.org/ui"
+	  xmlns:c="http://java.sun.com/jsp/jstl/core">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1" />
+<title>Mantenimiento de Usuario</title>
+</head>
+<body>
+	<ui:composition template="/plantillas/plantilla.xhtml">
+		<ui:define name="body">
+			<h:form id="formulario">
+				<p:panel id="panel" header="Mantenimiento de Usuario">
+					<p:messages id="msgs"/>
+					
+					<p:panelGrid id="grid1" style="width:100%; margin-top:20px">
+						<f:facet name="header">  
+					        <p:row>  
+					            <p:column colspan="2">Datos del Usuario</p:column>  
+					        </p:row> 
+					    </f:facet> 
+					    <c:if test="#{formUsuario.usuario.idUsuario != 0}">
+						    <p:row>  
+					            <p:column style="width:25%;"><h:outputLabel value="Código:" /></p:column> 
+					            <p:column style="width:75%;"><h:outputText value="#{formUsuario.usuario.idUsuario}" /></p:column> 
+					        </p:row>
+					         <p:row>  
+					            <p:column><h:outputLabel value="Estado:" /></p:column> 
+					            <p:column>
+					            	<h:outputText value="Activo" rendered="#{formUsuario.usuario.estado == 0}"/>
+					            	<h:outputText value="Desactivado" rendered="#{formUsuario.usuario.estado == 1}"/>
+					            </p:column> 
+					        </p:row>
+					    </c:if>
+					    <p:row>  
+				            <p:column><h:outputLabel value="Nombre:" /></p:column> 
+				            <p:column>
+				            	<p:inputText id="txtNombre" value="#{formUsuario.usuario.nombre}" required="true" label="Nombre"/>
+				            </p:column> 
+				        </p:row>
+				        <p:row>  
+				            <p:column><h:outputLabel value="Apellido Paterno:" /></p:column> 
+				            <p:column><p:inputText value="#{formUsuario.usuario.apePat}" required="true" label="Apellido Paterno"/></p:column> 
+				        </p:row>
+				        <p:row>  
+				            <p:column><h:outputLabel value="Apellido Materno:" /></p:column> 
+				            <p:column><p:inputText value="#{formUsuario.usuario.apeMat}" required="true" label="Apellido Materno"/></p:column> 
+				        </p:row>
+						<p:row>  
+				            <p:column><h:outputLabel value="Fecha de Ingreso:" /></p:column> 
+				            <p:column><p:calendar value="#{formUsuario.usuario.fechaIngreso}" pattern="dd/MM/yyyy" showOn="button"/></p:column> 
+				        </p:row>
+	        	        <p:row>  
+				            <p:column><h:outputLabel value="Login:" /></p:column> 
+				            <p:column><p:inputText value="#{formUsuario.usuario.login}" required="true" label="Nombre de Usuario"/></p:column> 
+				        </p:row>
+				        <p:row>  
+				            <p:column><h:outputLabel value="Password:" /></p:column> 
+				            <p:column><p:inputText value="#{formUsuario.usuario.password}" required="true" label="Contraseña"/></p:column>
+				        </p:row>
+				        <p:row>  
+				            <p:column><h:outputLabel value="Area:" /></p:column> 
+				            <p:column>
+					            <p:selectOneMenu value="#{formUsuario.usuario.tbAreaIdArea}" size="1" >
+									<f:selectItems value="#{formUsuario.areaList}" var="area"
+										itemLabel="#{area.descripcion}" itemValue="#{area.idArea}" />
+								</p:selectOneMenu>
+							</p:column>
+				        </p:row>
+						<f:facet name="footer">  
+					        <p:row>  
+					            <c:if test="#{formUsuario.usuario.idUsuario == 0}">
+						            <p:column colspan="2"><p:commandButton value="Registrar Usuario" update="panel" action="#{formUsuario.registrarOrActualizar}" icon="ui-icon-check"/></p:column>
+					        	</c:if>
+					        	<c:if test="#{formUsuario.usuario.idUsuario != 0}">
+						            <p:column colspan="2"><p:commandButton value="Actualizar Usuario" update="panel" action="#{formUsuario.registrarOrActualizar}" icon="ui-icon-check"/></p:column>
+					        	</c:if>
+					        </p:row> 
+					    </f:facet> 
+					</p:panelGrid>
+				</p:panel>
+			</h:form>
+		</ui:define>
+	</ui:composition>
+</body>
+</html>

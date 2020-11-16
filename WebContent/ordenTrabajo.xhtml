@@ -1,0 +1,97 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	  xmlns:f="http://java.sun.com/jsf/core"
+	  xmlns:h="http://java.sun.com/jsf/html"
+	  xmlns:ui="http://java.sun.com/jsf/facelets"
+	  xmlns:p="http://primefaces.org/ui">
+<h:head>
+	<title>Orden de Trabajo</title>
+</h:head>
+<h:body>
+	<ui:composition template="/plantillas/plantilla.xhtml">
+		<ui:define name="body">
+			<h:form id="form">  
+				<h2 class="centered">Orden de Trabajo</h2>	
+							
+				<h:commandLink id="cmdAgregar" class="add" action="#{formOrden.editar}">
+		    		<p:graphicImage value="imagenes/iconos/add.png" title="Registrar nueva Orden de Trabajo" width="20"/>
+		    		<f:param name="login" value="#{login.usuario.login}" />
+			    	<h:outputLabel value="Registrar nueva Orden de Trabajo" />
+		    	</h:commandLink>
+		    	<h:commandLink action="menuBlanco" style="padding-left: 442px;">
+					<p:graphicImage value="imagenes/iconos/return.png" title="Volver" width="20"/>
+				</h:commandLink>
+				
+				<br/><br/>
+				
+			    <p:dataTable id="dtbOrdenes" value="#{formOrden.mediumOrdenesModel}" var="item" paginator="true" rows="10"   
+			                 selection="#{formOrden.orden}" selectionMode="single" rendered="#{not empty formOrden.ordenList}">  
+			        <p:column headerText="Nro. O.T" styleClass="centered">#{item.idOtrabajo}</p:column>  
+			        <p:column headerText="Fecha Inicio" styleClass="centered">
+			        	<h:outputText value="#{item.fechaInicio}">
+							<f:convertDateTime pattern="dd/MM/yyyy" />
+						</h:outputText>
+			        </p:column> 
+			        <p:column headerText="Fecha Fin" styleClass="centered">
+			        	<h:outputText value="#{item.fechaTermino}">
+							<f:convertDateTime pattern="dd/MM/yyyy" />
+						</h:outputText>
+			        </p:column> 
+			        <p:column headerText="Comentarios">#{item.comentarios.length() gt 30 ? item.comentarios.substring(0,15).concat('...') : item.comentarios}</p:column> 
+			        <p:column headerText="Nro S.S" styleClass="centered">#{item.tbSolicitudIdSolicitud}</p:column> 
+					<p:column headerText="" styleClass="centered">
+						<h:commandLink class="add" action="#{formOrden.editar}">
+							<f:param name="codigo" value="#{item.idOtrabajo}"/>
+							<p:graphicImage value="imagenes/iconos/table_edit.png" title="Editar" width="20"/>
+						</h:commandLink>
+						<h:commandLink class="add" action="#{formOrden.eliminar}" disabled="true">
+							<f:param name="codigo" value="#{item.idOtrabajo}"/>
+							<p:graphicImage value="imagenes/iconos/table_delete.png" title="Eliminar" width="20"/>
+						</h:commandLink>
+					</p:column>
+					
+					<p:ajax event="rowSelect" listener="#{formOrden.onRowSelect}"   
+                    	update=":form:pnlDetalle :form:growlMensaje" oncomplete="DetalleDialog.show()" />  
+        			<p:ajax event="rowUnselect" listener="#{formOrden.onRowUnselect}" update=":form:growlMensaje"/>  
+			    </p:dataTable>  
+			    
+			    <p:growl id="growlMensaje" showDetail="true"/> 
+			    
+		        <p:dialog id="dialogDetalle" header="Detalle Orden" widgetVar="DetalleDialog" resizable="false" 
+		        		  showEffect="fade" hideEffect="explode">
+		        		  
+			        <h:panelGrid id="pnlDetalle" columns="2" cellpadding="4" width="300">
+			            <f:facet name="header">
+			                <p:graphicImage value="imagenes/iconos/solicitud.png"/>
+			            </f:facet>
+			
+			            <h:outputText value="Nro. O.T:" />
+			            <h:outputText value="#{formOrden.orden.idOtrabajo}" />
+			
+						<h:outputText value="Fecha Inicio:" />
+			            <h:outputText value="#{formOrden.orden.fechaInicio}">
+			            	<f:convertDateTime pattern="dd/MM/yyyy" />
+			            </h:outputText>
+			            
+			            <h:outputText value="Fecha Fin:" />
+			            <h:outputText value="#{formOrden.orden.fechaTermino}">
+			            	<f:convertDateTime pattern="dd/MM/yyyy" />
+			            </h:outputText>
+			            
+			            <h:outputText value="Comentarios:" />
+			            <h:outputText value="#{formOrden.orden.comentarios}" />
+			            
+			             <h:outputText value="Nro. S.S:" />
+			            <h:outputText value="#{formOrden.orden.tbSolicitudIdSolicitud}" />
+			        </h:panelGrid>
+			    </p:dialog> 
+        	</h:form>         
+			<h:panelGroup rendered="#{empty formOrden.ordenList}">
+				<p>¡La Tabla está vacía! Por favor agregar nuevas Ordenes de Trabajo.</p>
+			</h:panelGroup>	
+		</ui:define>
+	</ui:composition>
+</h:body>
+</html>

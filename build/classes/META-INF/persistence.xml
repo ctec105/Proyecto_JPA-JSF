@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<persistence version="2.0"
+	xmlns="http://java.sun.com/xml/ns/persistence" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://java.sun.com/xml/ns/persistence http://java.sun.com/xml/ns/persistence/persistence_2_0.xsd">
+	<persistence-unit name="MI_UNIDAD_DE_PERSISTENCIA">
+		<class>pe.edu.proyecto.persistence.entity.TbSolicitudHasTbEstado</class>
+		<class>pe.edu.proyecto.persistence.entity.TbSolicitud</class>
+		<class>pe.edu.proyecto.persistence.entity.TbModelo</class>
+		<class>pe.edu.proyecto.persistence.entity.TbMarca</class>
+		<class>pe.edu.proyecto.persistence.entity.TbEstado</class>
+		<class>pe.edu.proyecto.persistence.entity.TbEquipohorometro</class>
+		<class>pe.edu.proyecto.persistence.entity.TbEquipo</class>
+		<class>pe.edu.proyecto.persistence.entity.TbCliente</class>
+		<class>pe.edu.proyecto.persistence.entity.TbClaseequipo</class>
+		<class>pe.edu.proyecto.persistence.entity.TbPaquete</class>
+		<class>pe.edu.proyecto.persistence.entity.TbPaquetesHasTbPaquetesactividade</class>
+		<class>pe.edu.proyecto.persistence.entity.TbPaquetesHasTbPaquetesherramienta</class>
+		<class>pe.edu.proyecto.persistence.entity.TbPaquetesHasTbPaquetesmateriale</class>
+		<class>pe.edu.proyecto.persistence.entity.TbPaquetesactividade</class>
+		<class>pe.edu.proyecto.persistence.entity.TbPaquetesherramienta</class>
+		<class>pe.edu.proyecto.persistence.entity.TbPaquetesmateriale</class>
+		<class>pe.edu.proyecto.persistence.entity.TbOrdenliquidacion</class>
+		<class>pe.edu.proyecto.persistence.entity.TbOrdentrabajo</class>
+		<class>pe.edu.proyecto.persistence.entity.TbOrdentrabajoHasTbTecnico</class>
+		<class>pe.edu.proyecto.persistence.entity.TbPaquetesHasTbOrdentrabajo</class>
+		<class>pe.edu.proyecto.persistence.entity.TbTecnico</class>
+		<class>pe.edu.proyecto.persistence.entity.TbEspecialidade</class>
+		<class>pe.edu.proyecto.persistence.entity.TbUsuario</class>
+		<class>pe.edu.proyecto.persistence.entity.TbDetalleprefactura</class>
+		<class>pe.edu.proyecto.persistence.entity.TbPrefactura</class>
+		<class>pe.edu.proyecto.persistence.entity.TbArea</class>
+		<class>pe.edu.proyecto.persistence.entity.TbAreaHasTbMenu</class>
+		<class>pe.edu.proyecto.persistence.entity.TbMenu</class>
+
+		<properties>
+			<property name="javax.persistence.jdbc.driver"  value="com.mysql.cj.jdbc.Driver"/>
+			<property name="javax.persistence.jdbc.url" value="jdbc:mysql://localhost:3306/grupodaw?useTimezone=true&amp;serverTimezone=UTC"/>
+			<property name="javax.persistence.jdbc.user" value="root"/>
+		   	<property name="javax.persistence.jdbc.password" value="root"/>
+		   	<property name="eclipselink.logging.level" value="FINE"/> 
+		</properties>
+	</persistence-unit>
+</persistence>

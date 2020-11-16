@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	  xmlns:f="http://java.sun.com/jsf/core"
+	  xmlns:h="http://java.sun.com/jsf/html"
+	  xmlns:ui="http://java.sun.com/jsf/facelets"
+	  xmlns:p="http://primefaces.org/ui">
+<h:head>
+</h:head>
+<h:body>
+	<ui:composition template="/plantillas/plantilla.xhtml">
+		<ui:define name="body">
+    		<h:form id="frmServicio" rendered="#{not empty solicitud.solicitudList}">
+				<h2 class="centered">Solicitud de Servicio</h2>
+				
+				<h:commandLink id="cmdRegistrar" class="add" action="#{solicitud.edit}">
+		    		<p:graphicImage value="imagenes/iconos/add.png" title="Registrar nueva Solicitud de Servicio" width="20"/>
+		    		<f:param name="login" value="#{login.usuario.login}" />
+		    		<h:outputText value="Registrar nueva Solicitud de Servicio" /> 
+		    	</h:commandLink>
+		    	<h:commandLink action="menuBlanco" style="padding-left: 448px;">
+					<p:graphicImage value="imagenes/iconos/return.png" title="Volver" width="20"/>
+				</h:commandLink>
+		    	
+		    	<br/><br/>
+				 
+			    <p:dataTable id="dtbServicios" value="#{solicitud.mediumSolicitudesModel}" var="item" paginator="true" rows="10"   
+			                 selection="#{solicitud.item}" selectionMode="single">  
+			        <p:column headerText="Nro. S.S.">#{item.idSolicitud}</p:column>  
+			        <!-- <p:column headerText="Nro. de Tarjeta">#{item.tbEquipo.nrotarjeta}</p:column> --> 
+			        <p:column headerText="Fecha" styleClass="centered">
+			        	<h:outputText value="#{item.fecha}">
+							<f:convertDateTime pattern="dd/MM/yyyy" />
+						</h:outputText>
+			        </p:column> 
+			        <p:column headerText="Representante">#{item.representante}</p:column> 
+			        <p:column headerText="Estado">
+			        	<h:panelGroup rendered="#{item.estado == '1'}">
+			        		<h:outputText value="En Espera" style="color:blue"/>
+			        	</h:panelGroup>
+			        	<h:panelGroup rendered="#{item.estado == '2'}">
+			        		<h:outputText value="En Proceso" style="color:green"/>
+			        	</h:panelGroup>
+			        	<h:panelGroup rendered="#{item.estado == '3'}">
+			        		<h:outputText value="Finalizado" style="color:red"/>
+			        	</h:panelGroup>
+			        </p:column> 
+			        <p:column headerText="Descripción">
+			        	<h:outputText value="#{item.desProblema.length() gt 30 ? item.desProblema.substring(0,15).concat('...') : item.desProblema}" />
+			        </p:column> 
+					<p:column headerText="" styleClass="centered">
+						<h:commandLink id="cmdEditar" action="#{solicitud.edit}">
+							<f:param name="codigo" value="#{item.idSolicitud}"/>
+							<p:graphicImage value="imagenes/iconos/table_edit.png" title="Editar" width="20"/>
+						</h:commandLink>
+						<h:panelGroup rendered="#{item.estado == 1}">
+							<h:commandLink id="cmdEliminar" class="add" action="#{solicitud.eliminar}">
+								<f:param name="codigo" value="#{item.idSolicitud}"/>
+								<p:graphicImage value="imagenes/iconos/table_delete.png" title="Eliminar" width="20"/>
+							</h:commandLink>
+						</h:panelGroup>
+					</p:column>
+					
+					<p:ajax event="rowSelect" listener="#{solicitud.onRowSelect}" update=":frmServicio:pnlDetalle :frmServicio:growlMensaje" oncomplete="detalleDialog.show()" />  
+        			<p:ajax event="rowUnselect" listener="#{solicitud.onRowUnselect}" update=":frmServicio:growlMensaje"/> 
+			    </p:dataTable>  
+			    
+			    <p:growl id="growlMensaje" showDetail="true"/>
+			    
+		        <p:dialog id="dlgDetalle" header="Detalle Solicitud" widgetVar="detalleDialog" resizable="false" 
+		        		  showEffect="fade" hideEffect="explode">
+			        <h:panelGrid id="pnlDetalle" columns="2" cellpadding="4" width="300">
+			            <f:facet name="header">
+			                <p:graphicImage value="imagenes/iconos/solicitud.png"/>
+			            </f:facet>
+			
+			            <h:outputText value="Nro. Solicitud:" />
+			            <h:outputText value="#{solicitud.item.idSolicitud}" />
+			            
+						<h:outputText value="Nro. Tarjeta:" />
+			            <h:outputText value="#{solicitud.item.tbEquipo.nrotarjeta}" />
+			            
+			            <h:outputText value="Fecha:" />
+			            <h:outputText value="#{solicitud.item.fecha}">
+			            	<f:convertDateTime pattern="dd/MM/yyyy" />
+			            </h:outputText>
+			            
+			            <h:outputText value="Representante:" />
+			            <h:outputText value="#{solicitud.item.representante}" />
+			            
+			            <h:outputText value="Estado:" />
+			            <h:outputText value="En Espera" rendered="#{solicitud.item.estado == 1}" />
+			            <h:outputText value="En Proceso" rendered="#{solicitud.item.estado == 2}"/>
+			            <h:outputText value="Finalizada" rendered="#{solicitud.item.estado == 3}" />
+			            
+			            <h:outputText value="Descripción:" />
+			            <h:outputText value="#{solicitud.item.desProblema}" />
+			        </h:panelGrid>
+			    </p:dialog> 
+	        </h:form>   
+			<h:panelGroup rendered="#{empty solicitud.solicitudList}">
+				<p>¡La Tabla está vacía! Por favor agregar nuevas Solicitudes de Servicio.</p>
+			</h:panelGroup>
+		</ui:define>
+	</ui:composition>
+</h:body>
+</html>

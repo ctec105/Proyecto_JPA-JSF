@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="ISO-8859-1" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	  xmlns:f="http://java.sun.com/jsf/core"
+	  xmlns:h="http://java.sun.com/jsf/html"
+	  xmlns:ui="http://java.sun.com/jsf/facelets"
+	  xmlns:p="http://primefaces.org/ui"
+	  xmlns:c="http://java.sun.com/jsp/jstl/core">
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=ISO-8859-1" />
+<title>Generar PreFactura</title>
+</head>
+<body>
+	<ui:composition template="/plantillas/plantilla.xhtml">
+		<ui:define name="body">
+			<h:form id="formulario">
+				<p:panel id="panel" header="Mantenimiento de Cliente">
+					<p:messages id="msgs"/>
+					
+					<!-- Datos del Cliente -->
+					<p:panelGrid id="grid1" style="width:100%; margin-top:20px">
+						<f:facet name="header">  
+					        <p:row>  
+					            <p:column colspan="2">Datos del Cliente</p:column>  
+					        </p:row> 
+					    </f:facet> 
+					    <p:row rendered="#{formCliente.flag == false}">  
+				            <p:column style="width:25%;"><h:outputLabel value="Código:" /></p:column> 
+				            <p:column style="width:75%;"><p:inputText value="#{formCliente.cliente.idCliente}" maxlength="10"/></p:column> 
+				        </p:row>
+					    <p:row>  
+				            <p:column><h:outputLabel value="Razón Social:" /></p:column> 
+				            <p:column><p:inputText value="#{formCliente.cliente.razonsocial}"/></p:column> 
+				        </p:row>
+				        <p:row>  
+				            <p:column><h:outputLabel value="Dirección:" /></p:column> 
+				            <p:column><p:inputText value="#{formCliente.cliente.direccion}"/></p:column> 
+				        </p:row>
+				        <p:row>  
+				            <p:column><h:outputLabel value="Telefono:" /></p:column> 
+				            <p:column><p:inputText value="#{formCliente.cliente.telefono}"/></p:column> 
+				        </p:row>
+						<f:facet name="footer">  
+					        <p:row>  
+					            <p:column colspan="2" rendered="#{formCliente.flag == false}"><p:commandButton value="Registrar Cliente" update="panel" action="#{formCliente.registrarOrActualizar}" icon="ui-icon-check"/></p:column>
+					            <p:column colspan="2" rendered="#{formCliente.flag == true}"><p:commandButton value="Actualizar Cliente" update="panel" action="#{formCliente.registrarOrActualizar}" icon="ui-icon-check"/></p:column>
+					        </p:row> 
+					    </f:facet> 
+					</p:panelGrid>
+				</p:panel>
+			</h:form>
+		</ui:define>
+	</ui:composition>
+</body>
+</html>

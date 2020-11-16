@@ -1,0 +1,86 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	  xmlns:f="http://java.sun.com/jsf/core"
+	  xmlns:h="http://java.sun.com/jsf/html"
+	  xmlns:ui="http://java.sun.com/jsf/facelets"
+	  xmlns:p="http://primefaces.org/ui"
+	  xmlns:c="http://java.sun.com/jsp/jstl/core">
+<h:head>
+</h:head>
+<h:body>
+	<ui:composition template="/plantillas/plantilla.xhtml">
+		<ui:define name="body">
+			<h2 class="centered">Mantenimiento de Paquetes</h2>
+			
+    		<h:form id="frmPquete" rendered="#{not empty formPaquete.paqueteList}">
+    			<h:commandLink id="cmdEditar" action="#{formPaquete.edit}">
+			    	<p:graphicImage value="imagenes/iconos/add.png" title="Registrar un nuevo Paquete" width="20"/>
+					<h:outputLabel value="Registrar un nuevo Paquete" />
+				</h:commandLink>
+				
+				<br/><br/>
+			
+			    <p:dataTable id="dtbPaquetes" value="#{formPaquete.mediumPaquetesModel}" var="item" paginator="true" rows="10"   
+			                 selection="#{formPaquete.paquete}" selectionMode="single">  
+			        <p:column headerText="Id">#{item.idPaquetes}</p:column>  
+			        <p:column headerText="Nombre">#{item.nombre}</p:column>
+			        <p:column headerText="Duración">#{item.duracion}</p:column>
+			        <p:column headerText="Precio">#{item.precio}</p:column>
+					<p:column headerText="Opciones" styleClass="centered">
+						<h:commandLink id="cmdEditar" action="#{formPaquete.edit}">
+							<f:param name="codigo" value="#{item.idPaquetes}"/>
+							<p:graphicImage value="imagenes/iconos/table_edit.png" title="Editar" width="20"/>
+						</h:commandLink>
+						<h:commandLink id="cmdEliminar" action="#{formPaquete.eliminar}">
+							<f:param name="codigo" value="#{item.idPaquetes}"/>
+							<p:graphicImage value="imagenes/iconos/table_delete.png" title="Eliminar" width="20"/>
+						</h:commandLink>
+					</p:column> 
+			    	<p:ajax event="rowSelect" listener="#{formPaquete.onRowSelect}" update=":frmPquete:pnlDetalle :frmPquete:growlDetalle" oncomplete="DetalleDialog.show()" />  
+        			<p:ajax event="rowUnselect" listener="#{formPaquete.onRowUnselect}" update=":frmPquete:growlDetalle"/>
+			    </p:dataTable>  
+			    
+			    <p:growl id="growlDetalle" showDetail="true"/> 
+			    
+		        <p:dialog id="dlgDetalle" header="Paquete Detalle" widgetVar="DetalleDialog" resizable="false" 
+		        		  showEffect="fade" hideEffect="explode">
+			        <h:panelGrid id="pnlDetalle" columns="2" cellpadding="4">
+			            <f:facet name="header">
+			                <p:graphicImage value="imagenes/iconos/solicitud.png"/>
+			            </f:facet>
+			
+			            <h:outputLabel value="Id:" />
+			            <h:outputText value="#{formPaquete.paquete.idPaquetes}" />
+			            
+			            <h:outputLabel value="Nombre:" />
+			            <h:outputText value="#{formPaquete.paquete.nombre}" />
+			            
+			            <h:outputLabel value="Duracción" />
+			            <h:outputText value="#{formPaquete.paquete.duracion}" />
+			            
+			            <h:outputLabel value="Precio" />
+			            <h:outputText value="#{formPaquete.paquete.precio}" />
+			            
+   			            <h:outputLabel value="Marca:" />
+			            <h:outputText value="Caterpillar" rendered="#{formPaquete.paquete.marca == 1}"/>
+			            <h:outputText value="KOMATSU" rendered="#{formPaquete.paquete.marca == 2}"/>
+			            
+			            <h:outputLabel value="Modelo:" />
+			            <h:outputText value="416E" rendered="#{formPaquete.paquete.modelo == 1}" />
+			            <h:outputText value="420E/420E IT" rendered="#{formPaquete.paquete.modelo == 2}" />
+			            <h:outputText value="430E/430E IT" rendered="#{formPaquete.paquete.modelo == 3}" />
+			            <h:outputText value="PC01-1" rendered="#{formPaquete.paquete.modelo == 4}" />
+			            <h:outputText value="PC18MR-3" rendered="#{formPaquete.paquete.modelo == 5}" />
+			            <h:outputText value="PC27MR-3" rendered="#{formPaquete.paquete.modelo == 6}" />
+			        </h:panelGrid>
+			    </p:dialog> 
+	        </h:form>   
+			<h:panelGroup rendered="#{empty formPaquete.paqueteList}">
+					<p>¡La Tabla está vacía! Por favor agregar nuevos Paquetes.</p>
+			</h:panelGroup>
+		</ui:define>
+	</ui:composition>
+</h:body>
+</html>

@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" 
+"http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:c="http://java.sun.com/jsp/jstl/core">
+<h:head>
+</h:head>
+<h:body>
+	<ui:composition>
+		<p:separator id="separatorCabecera" />
+
+		<h:outputLabel value="Usuario: " />
+		<h:outputText value="#{login.usuario.nombre} #{login.usuario.apePat} #{login.usuario.apeMat}" />
+
+		<p:spacer width="50" height="10" />
+
+		<h:outputLabel value="Area: " />
+		<c:if test="#{login.usuario.tbAreaIdArea == 1}">
+			<h:outputText value="Liquidación" />
+		</c:if>
+		<c:if test="#{login.usuario.tbAreaIdArea == 2}">
+			<h:outputText value="Comercial" />
+		</c:if>
+		<c:if test="#{login.usuario.tbAreaIdArea == 3}">
+			<h:outputText value="Post-Venta" />
+		</c:if>
+		<c:if test="#{login.usuario.tbAreaIdArea == 4}">
+			<h:outputText value="Sistemas" />
+		</c:if>
+
+		<p:spacer width="50" height="10" />
+
+		<h:form id="formtema" style="display: inline">
+			<h:outputLabel value="Cambiar tema: "/>
+			<p:menuButton value="">
+				<p:menuitem onclick="dlgTheme.show();" value="Temas" immediate="true" icon="ui-icon-check" />
+			</p:menuButton>
+
+			<p:dialog id="dialogTemas" header="Temas" widgetVar="dlgTheme" modal="true" hideEffect="explode" width="400" height="200"> <!-- showEffect="bounce" -->
+				<h:panelGrid id="pnlTemas" columns="2">
+					<p:selectOneMenu id="cboTemas" value="#{cambiadorTemas.tema}" immediate="true" editable="true">
+						<f:selectItems value="#{cambiadorTemas.themes}" />
+					</p:selectOneMenu>
+					<p:commandButton id="btnCambiar" value="Cambiar" action="#{cambiadorTemas.cambiar}" ajax="false" /> <!-- ajax="false" -->
+					<!-- <h:outputLink id="cmdPrevisualizar" value="temas.xhtml">Previsualizar Temas</h:outputLink> -->
+				</h:panelGrid>
+			</p:dialog>
+		</h:form>
+	</ui:composition>
+</h:body>
+</html>
